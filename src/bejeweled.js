@@ -1,4 +1,4 @@
-(function(){ 
+(function(){ "use-strict";
 
 	var Bejeweled = this.Bejeweled = this.Bejeweled || {};
 
@@ -19,7 +19,7 @@
 	}
 
 	function update(){
-		board.update();
+		board.update(game);
 	}
 	
 }).call(this);

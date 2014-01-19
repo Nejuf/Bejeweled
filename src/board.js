@@ -1,4 +1,4 @@
-(function(){
+(function(){ "use-strict";
 
 	var Bejeweled = this.Bejeweled = this.Bejeweled || {};
 
@@ -8,19 +8,23 @@
 		this.squareSize = squareSize || 64;//in pixels
 	};
 
+	var Jewel = Bejeweled.Jewel;
+
 	Board.preload = function(game){
-		game.load.spritesheet('jewel-blue', 'assets/img/jewel-blue.png', 32,32);
-		game.load.spritesheet('jewel-red', 'assets/img/jewel-red.png', 48,48);
-		game.load.spritesheet('jewel-yellow', 'assets/img/jewel-yellow.png', 48,46);
-		game.load.spritesheet('jewel-gray', 'assets/img/jewel-gray.png', 64,32);
-		game.load.spritesheet('jewel-purple', 'assets/img/jewel-purple.png', 48,48);
+		Jewel.preload(game);
 	}
 
 	Board.prototype.create = function(game){
-
+		this.jewels = game.add.group();
+		for(var r = 0; r < this.width; r++){
+			for(var c = 0; c < this.height; c++){
+				this.jewels.add(new Jewel(game, r*this.squareSize, c*this.squareSize));
+			}
+		}
 	}
-	Board.prototype.update = function(){
-		
+
+	Board.prototype.update = function(game){
+
 	}
 
 }).call(this);
