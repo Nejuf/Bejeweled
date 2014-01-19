@@ -14,6 +14,11 @@
 		this.color = color || _.sample(COLORS);
 		Phaser.Sprite.call(this, game, x, y, 'jewel-' + this.color);
 
+		this.anchor.setTo(0.5, 0.5);
+
+		this.inputEnabled = true;
+		this.events.onInputDown.add(onClick, this);
+
 		return this;
 	}
 
@@ -28,9 +33,17 @@
 		game.load.spritesheet('jewel-purple', 'assets/img/jewel-purple.png', 48,48);
 	}
 
-	Jewel.prototype.update = function(game){
-		
+	Jewel.prototype.update = function(){
+		if(this.isSelected){
+			this.angle += 8;
+		}
+		else if(this.angle !== 0){
+			this.angle = 0;
+		}
 	}
 
+	function onClick(jewel, pointer){
+		jewel.isSelected = !jewel.isSelected;
+	}
 	
 }).call(this);

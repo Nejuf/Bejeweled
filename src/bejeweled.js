@@ -2,7 +2,7 @@
 
 	var Bejeweled = this.Bejeweled = this.Bejeweled || {};
 
-	var game = new Phaser.Game(700, 540, Phaser.AUTO, 'bejeweled-container', {
+	var game = new Phaser.Game(700, 540, Phaser.CANVAS, 'bejeweled-container', {
 		preload: preload,
 		create: create,
 		update: update
