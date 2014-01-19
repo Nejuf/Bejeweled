@@ -43,7 +43,23 @@
 	}
 
 	function onClick(jewel, pointer){
-		jewel.isSelected = !jewel.isSelected;
+		var selectedJewel = jewel.groupSelectedJewel();
+		if(selectedJewel && selectedJewel !== jewel){
+			//TODO: attempt swap
+		}
+		else{
+			jewel.isSelected = !jewel.isSelected;
+		}
+	}
+
+	Jewel.prototype.groupSelectedJewel = function(){
+		var otherJewel;
+		this.group.forEachAlive(function(jewel){
+			if(jewel.isSelected){
+				otherJewel = jewel;
+			}
+		});
+		return otherJewel;
 	}
 	
 }).call(this);
