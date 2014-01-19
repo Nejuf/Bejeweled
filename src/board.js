@@ -2,7 +2,9 @@
 
 	var Bejeweled = this.Bejeweled = this.Bejeweled || {};
 
-	var Board = Bejeweled.Board = function(width, height, squareSize){
+	var Board = Bejeweled.Board = function(x, y, width, height, squareSize){
+		this.x = x;
+		this.y = y;
 		this.width = width || 8;
 		this.height = height || 8;
 		this.squareSize = squareSize || 64;//in pixels
@@ -18,7 +20,8 @@
 		this.jewels = game.add.group();
 		for(var r = 0; r < this.width; r++){
 			for(var c = 0; c < this.height; c++){
-				this.jewels.add(new Jewel(game, r*this.squareSize, c*this.squareSize));
+				this.jewels.add(new Jewel(game, this.x + r*this.squareSize, 
+					this.y + c*this.squareSize));
 			}
 		}
 	}
