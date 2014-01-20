@@ -9,6 +9,9 @@
 		this.height = height || 8;
 		this.squareSize = squareSize || 64;//in pixels
 		this.matchFree = false;
+
+		game.input.keyboard.addKeyCapture([Phaser.Keyboard.D]);
+		this.debugKey = game.input.keyboard.addKey(Phaser.Keyboard.D);
 	};
 
 	var Jewel = Bejeweled.Jewel;
@@ -39,6 +42,11 @@
 				this.matchFree = true;
 			}
 		}
+
+		//Debug
+		if(this.debugKey.isDown){
+			this.printJewelMatrix();
+		};
 	};
 
 	Board.prototype.checkMatches = function(){
@@ -233,6 +241,7 @@
 	};
 
 	Board.prototype.printJewelMatrix = function(){
+		console.log('');
 		for(var r = 0; r < this.height; r++){
 			var str = "";
 			for(var c = 0; c < this.width; c++){
@@ -241,5 +250,43 @@
 			}
 			console.log(str);
 		}
+	};
+
+	Board.prototype.attemptSwap = function(selectedJewel, jewel){
+		var selectedCoord = this.getJewelCoord(selectedJewel);
+		var destCoord = this.getJewelCoord(jewel);
+
+		var diffRow = Math.abs(selectedCoord[0] - destCoord[0]);
+		var diffCol = Math.abs(selectedCoord[1] - destCoord[1]);
+		if( (diffRow === 1 && diffCol === 0) || (diffRow === 0 && diffCol === 1)){
+			console.log('valid destination');
+			if(this.swapMakesMatch(selectedCoord, destCoord)){
+				//TODO
+			}
+			else{
+				console.log('swap would not trigger match');
+				selectedJewel.isSelected = false;
+			}
+		}
+		else{
+			//Invalid destination
+			selectedJewel.isSelected = false;
+			console.log('invalid destination');
+		}
+	};
+
+	Board.prototype.getJewelCoord = function(jewel){
+		for(var r = 0; r < this.jewelMatrix.length; r++){
+			for(var c = 0; c < this.jewelMatrix[r].length; c++){
+				if(this.jewelMatrix[r][c] === jewel){
+					return [r,c];
+				}
+			}
+		}
+	};
+
+	Board.prototype.swapMakesMatch = function(fromCoord, toCoord){
+		//TODO
+		return false;
 	};
 }).call(this);

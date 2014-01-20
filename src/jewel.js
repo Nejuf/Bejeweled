@@ -13,6 +13,7 @@
 	var Jewel = Bejeweled.Jewel = function(game, x, y, color){
 		this.jewelColor = color || _.sample(COLORS);
 		this.collected = false;
+		this.board = game.board;
 		Phaser.Sprite.call(this, game, x, y, 'jewel-' + this.jewelColor);
 
 		this.anchor.setTo(0.5, 0.5);
@@ -48,7 +49,7 @@
 	function onClick(jewel, pointer){
 		var selectedJewel = jewel.groupSelectedJewel();
 		if(selectedJewel && selectedJewel !== jewel){
-			//TODO: attempt swap
+			jewel.board.attemptSwap(selectedJewel, jewel);
 		}
 		else{
 			jewel.isSelected = !jewel.isSelected;
