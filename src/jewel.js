@@ -12,6 +12,7 @@
 
 	var Jewel = Bejeweled.Jewel = function(game, x, y, color){
 		this.jewelColor = color || _.sample(COLORS);
+		this.collected = false;
 		Phaser.Sprite.call(this, game, x, y, 'jewel-' + this.jewelColor);
 
 		this.anchor.setTo(0.5, 0.5);
@@ -84,6 +85,7 @@
 	};
 
 	Jewel.prototype.collect = function(game){
+		this.collected = true;
 		var exitTween = game.add.tween(this);
 		exitTween.to({alpha: 0.2 });
 		exitTween.onComplete.add(function(jewel){

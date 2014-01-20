@@ -17,6 +17,7 @@
 	};
 
 	Board.prototype.create = function(game){
+		this.game = game;
 		this.jewelMatrix = [];
 		this.jewels = game.add.group();
 		for(var r = 0; r < this.width; r++){
@@ -133,11 +134,11 @@
 		var board = this;
 		_.each(matchGroup, function(coord){
 			var jewel = board.jewelMatrix[coord[0]][coord[1]];
-			//TODO Remove jewels from board
 			jewel.collect(game);
 			board.dropColumn(coord, matchGroup);
 		});
 		board.updateMatrix(matchGroup);
+		board.refillBoard();
 	};
 
 	Board.prototype.dropColumn = function(coord, matchGroup){
@@ -156,16 +157,47 @@
 		_.each(matchGroup, function(coord){
 			var row = coord[0]-1;
 			while(row >= 0){
-				if(!includesSubArray([row, coord[1]], matchGroup)){
-					var jewel = board.jewelMatrix[row][coord[1]];
-					board.jewelMatrix[row][coord[1]] = null;
+				var jewel = board.jewelMatrix[row][coord[1]];
+				if(!jewel || !jewel.collected){
 					board.jewelMatrix[row+1][coord[1]] = jewel;
 				}
+				board.jewelMatrix[row][coord[1]] = null;
 				row -= 1;
 			}
 		});
-		console.log(board.jewelMatrix)
-	}
+	};
+
+	Board.prototype.refillBoard = function(){
+		var board = this;
+		var col = 0;
+		while(col < board.width){
+			var nullCount = board.nullsInColumn(col);
+			_(nullCount).times(function(n){
+				//TODO: Recycle dead jewel sprites
+				var jewel = new Jewel(board.game, board.x + col*board.squareSize,
+										board.y - (n+1) * board.squareSize  );
+				board.jewels.add(jewel);
+				jewel.alpha = 0.3;
+				_(nullCount).times(function(_n){
+					jewel.drop(board.game, board.squareSize);
+				});
+				board.jewelMatrix[nullCount-1-n][col] = jewel;
+
+			});
+
+			col++;
+		}
+	};
+
+	Board.prototype.nullsInColumn = function(colNumber){
+		var nullCount = 0;
+		for(var r = 0, len = this.height; r < len; r++){
+			if(this.jewelMatrix[r][colNumber] === null){
+				nullCount++;
+			}
+		}
+		return nullCount;
+	};
 
 	var includesSubArray = function(subArray, mainArray){
 		return _.some(mainArray, function(el){
