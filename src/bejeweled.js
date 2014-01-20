@@ -12,14 +12,18 @@
 		Bejeweled.Board.preload(game);
 	}
 
-	var board;
 	function create(){
-		board = game.board = new Bejeweled.Board(150, 20, 8, 8, 64);
-		board.create(game);
+		game.score = 0;
+
+		game.board = new Bejeweled.Board(150, 20, 8, 8, 64);
+		game.board.create(game);
+
+		game.hud = new Bejeweled.HUD(game, 0, 0, 700, 540);
 	}
 
 	function update(){
-		board.update(game);
+		game.board.update(game);
+		game.hud.updateScore(game.score);
 	}
 	
 }).call(this);
