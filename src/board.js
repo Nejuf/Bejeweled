@@ -14,7 +14,7 @@
 
 	Board.preload = function(game){
 		Jewel.preload(game);
-	}
+	};
 
 	Board.prototype.create = function(game){
 		this.jewelMatrix = [];
@@ -30,16 +30,17 @@
 		}
 
 		this.checkMatches();
-	}
+	};
 
 	Board.prototype.update = function(game){
 
-	}
+	};
 
 	Board.prototype.checkMatches = function(){
 		var checkedIndices = {};
+		var removedJewels = false;
 		this.eachJewelFromBottom(function(jewel, row, col){
-			if(checkedIndices.hasOwnProperty([row,col]) || !jewel){
+			if(checkedIndices.hasOwnProperty([row,col]) || !jewel || removedJewels){
 				return;
 			}
 			checkedIndices[[row,col]] = jewel;
@@ -53,10 +54,11 @@
 
 			if(matchedCheckedCoords.length >= 3 && this.isValidMatch(matchedCheckedCoords)){
 				this.removeMatchedJewels(matchedCheckedCoords);
+				removedJewels = true;
 			}
 		});
 		
-	}
+	};
 
 	Board.prototype.eachJewelFromBottom = function(iterator){
 		for(var r = this.height-1; r >= 0; r--){
@@ -126,15 +128,46 @@
 		}
 
 		return false;
-	}
+	};
 
 	Board.prototype.removeMatchedJewels = function(matchGroup){
 		var board = this;
 		_.each(matchGroup, function(coord){
 			var jewel = board.jewelMatrix[coord[0]][coord[1]];
-			jewel.alpha = 0.2;
 			//TODO Remove jewels from board
+			jewel.collect(game);
+			board.dropColumn(coord, matchGroup);
 		});
-	}
+	};
+
+	Board.prototype.dropColumn = function(coord, matchGroup){
+		var row = coord[0]-1;
+		while(row >= 0){
+			if(!includesSubArray([row, coord[1]], matchGroup)){
+				console.log('matchGroup: ', matchGroup);
+				console.log('jewel: ' + row + ' ' + coord[1]);
+				var jewel = this.jewelMatrix[row][coord[1]];
+				jewel.drop(game, this.squareSize);
+			}
+
+			//TODO spawn new jewel
+
+			row -= 1;
+		}
+	};
+
+	var includesSubArray = function(subArray, mainArray){
+		return _.some(mainArray, function(el){
+			if(el.length !== subArray.length){
+				return false;
+			}
+			for(var i=0, len = el.length; i < len; i++){
+				if(el[i] !== subArray[i]){
+					return false;
+				}
+			}
+			return true;
+		});
+	};
 
 }).call(this);
