@@ -11,8 +11,8 @@
 	]
 
 	var Jewel = Bejeweled.Jewel = function(game, x, y, color){
-		this.color = color || _.sample(COLORS);
-		Phaser.Sprite.call(this, game, x, y, 'jewel-' + this.color);
+		this.jewelColor = color || _.sample(COLORS);
+		Phaser.Sprite.call(this, game, x, y, 'jewel-' + this.jewelColor);
 
 		this.anchor.setTo(0.5, 0.5);
 
