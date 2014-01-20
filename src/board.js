@@ -286,7 +286,53 @@
 	};
 
 	Board.prototype.swapMakesMatch = function(fromCoord, toCoord){
-		//TODO
-		return false;
+		var board = this;
+		var fromJewel = this.jewelMatrix[fromCoord[0]][fromCoord[1]];
+		var toJewel = this.jewelMatrix[toCoord[0]][toCoord[1]];
+
+		var combos = [
+			[[-1,0], [-2,0]],
+			[[-1,0], [1,0]],
+			[[1,0], [2,0]],
+			[[0,-1], [0,-2]],
+			[[0,-1], [0,1]],
+			[[0,1], [0,2]]
+		];
+
+		var matchedCombo = _.some(combos, function(combo){
+			var jewel1, jewel2;
+			var row1, col1, row2, col2;
+
+			//To jewel
+			row1 = fromCoord[0]+combo[0][0];
+			col1 = fromCoord[1]+combo[0][1];
+			row2 = fromCoord[0]+combo[1][0];
+			col2 = fromCoord[1]+combo[1][1];
+			if(row1 >= 0 && row1 < board.height && row2 >= 0 && row2 < board.height && col1 >= 0 && col1 < board.width && col2 >= 0 && col2 < board.width){
+				jewel1 = board.jewelMatrix[row1][col1];
+				jewel2 = board.jewelMatrix[row2][col2];
+				if(jewel1.jewelColor === jewel2.jewelColor && jewel1.jewelColor === toJewel.jewelColor){
+					return true;
+				}
+			}
+
+			//From jewel
+			row1 = toCoord[0]+combo[0][0];
+			col1 = toCoord[1]+combo[0][1];
+			row2 = toCoord[0]+combo[1][0];
+			col2 = toCoord[1]+combo[1][1];
+			if(row1 >= 0 && row1 < board.height && row2 >= 0 && row2 < board.height && col1 >= 0 && col1 < board.width && col2 >= 0 && col2 < board.width){
+				jewel1 = board.jewelMatrix[row1][col1];
+				jewel2 = board.jewelMatrix[row2][col2];
+				if(jewel1.jewelColor === jewel2.jewelColor && jewel1.jewelColor === fromJewel.jewelColor){
+					return true;
+				}
+			}
+
+			return false;
+		});
+
+
+		return matchedCombo;
 	};
 }).call(this);
