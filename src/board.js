@@ -8,6 +8,7 @@
 		this.width = width || 8;
 		this.height = height || 8;
 		this.squareSize = squareSize || 64;//in pixels
+		this.matchFree = false;
 	};
 
 	var Jewel = Bejeweled.Jewel;
@@ -33,7 +34,11 @@
 	};
 
 	Board.prototype.update = function(game){
-
+		if(!this.matchFree && !this.isJewelDropping()){
+			if(!this.checkMatches()){
+				this.matchFree = true;
+			}
+		}
 	};
 
 	Board.prototype.checkMatches = function(){
@@ -58,6 +63,7 @@
 			}
 		});
 		
+		return removedJewels;
 	};
 
 	Board.prototype.eachJewelFromBottom = function(iterator){
@@ -155,14 +161,17 @@
 	Board.prototype.updateMatrix = function(matchGroup){
 		var board = this;
 		_.each(matchGroup, function(coord){
-			var row = coord[0]-1;
-			while(row >= 0){
-				var jewel = board.jewelMatrix[row][coord[1]];
-				if(!jewel || !jewel.collected){
-					board.jewelMatrix[row+1][coord[1]] = jewel;
+			board.jewelMatrix[coord[0]][coord[1]] = null;
+		});
+
+		board.eachJewelFromBottom(function(jewel, row, col){
+			if(jewel){
+				var newRow = row + 1;
+				while(newRow < board.height && board.jewelMatrix[newRow][col] === null){
+					board.jewelMatrix[newRow][col] = jewel;
+					board.jewelMatrix[newRow-1][col] = null;
+					newRow++;
 				}
-				board.jewelMatrix[row][coord[1]] = null;
-				row -= 1;
 			}
 		});
 	};
@@ -177,7 +186,7 @@
 				var jewel = new Jewel(board.game, board.x + col*board.squareSize,
 										board.y - (n+1) * board.squareSize  );
 				board.jewels.add(jewel);
-				jewel.alpha = 0.3;
+				jewel.alpha = 0.3;//for debug
 				_(nullCount).times(function(_n){
 					jewel.drop(board.game, board.squareSize);
 				});
@@ -213,4 +222,24 @@
 		});
 	};
 
+	Board.prototype.isJewelDropping = function(){
+		var activeTween = false;
+		this.jewels.forEachAlive(function(jewel){
+			if(jewel.dropTween && jewel.dropTween.isRunning){
+				activeTween = true;
+			}
+		});
+		return activeTween;
+	};
+
+	Board.prototype.printJewelMatrix = function(){
+		for(var r = 0; r < this.height; r++){
+			var str = "";
+			for(var c = 0; c < this.width; c++){
+				var jewel = this.jewelMatrix[r][c];
+				str += " " + (jewel ? jewel.jewelColor[0] : "-") + " ";
+			}
+			console.log(str);
+		}
+	};
 }).call(this);
