@@ -111,6 +111,8 @@
 		var moveOtherTween = otherJewel.moveTween = this.board.game.add.tween(otherJewel);
 		moveOtherTween.to({y: thisJewelY, x: thisJewelX});
 
+		thisJewel.destY = otherJewelY;
+		otherJewel.destY = thisJewelY;
 		if(isInvalidSwap){
 			moveTween.onComplete.add(function(jewel){
 				var moveAgainTween = thisJewel.moveTween = jewel.board.game.add.tween(jewel);
@@ -122,6 +124,9 @@
 				moveAgainTween.to({y: otherJewelY, x: otherJewelX});
 				moveAgainTween.start();
 			});
+			
+			thisJewel.destY = thisJewelY;
+			otherJewel.destY = otherJewelY;
 		}
 		moveTween.start();
 		moveOtherTween.start();

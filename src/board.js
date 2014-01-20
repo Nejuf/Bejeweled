@@ -194,7 +194,6 @@
 				var jewel = new Jewel(board.game, board.x + col*board.squareSize,
 										board.y - (n+1) * board.squareSize  );
 				board.jewels.add(jewel);
-				jewel.alpha = 0.3;//for debug
 				_(nullCount).times(function(_n){
 					jewel.drop(board.game, board.squareSize);
 				});
