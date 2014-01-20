@@ -67,14 +67,12 @@
 	Jewel.prototype.drop = function(game, squareSize){
 		var dropSpeed = 0.2;
 		if(this.dropTween){
-			//debugger
 			this.destY += squareSize;
 			this.dropTween.stop();
 			this.dropTween = game.add.tween(this);
 			this.dropTween.to({y: this.destY}, (this.destY-this.y)/dropSpeed );
 			this.dropTween.delay(1000);
 			this.dropTween.start();
-			//TODO tween at a set velocity
 		}
 		else{
 			this.destY = this.y + squareSize;
