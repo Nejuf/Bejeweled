@@ -28,7 +28,6 @@
 				this.jewels.add(jewel);
 			}
 		}
-
 		this.checkMatches();
 	};
 
@@ -138,23 +137,35 @@
 			jewel.collect(game);
 			board.dropColumn(coord, matchGroup);
 		});
+		board.updateMatrix(matchGroup);
 	};
 
 	Board.prototype.dropColumn = function(coord, matchGroup){
 		var row = coord[0]-1;
 		while(row >= 0){
 			if(!includesSubArray([row, coord[1]], matchGroup)){
-				console.log('matchGroup: ', matchGroup);
-				console.log('jewel: ' + row + ' ' + coord[1]);
 				var jewel = this.jewelMatrix[row][coord[1]];
 				jewel.drop(game, this.squareSize);
 			}
-
-			//TODO spawn new jewel
-
 			row -= 1;
 		}
 	};
+
+	Board.prototype.updateMatrix = function(matchGroup){
+		var board = this;
+		_.each(matchGroup, function(coord){
+			var row = coord[0]-1;
+			while(row >= 0){
+				if(!includesSubArray([row, coord[1]], matchGroup)){
+					var jewel = board.jewelMatrix[row][coord[1]];
+					board.jewelMatrix[row][coord[1]] = null;
+					board.jewelMatrix[row+1][coord[1]] = jewel;
+				}
+				row -= 1;
+			}
+		});
+		console.log(board.jewelMatrix)
+	}
 
 	var includesSubArray = function(subArray, mainArray){
 		return _.some(mainArray, function(el){
