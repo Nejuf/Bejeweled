@@ -37,7 +37,7 @@
 	};
 
 	Board.prototype.update = function(game){
-		if(!this.matchFree && !this.isJewelDropping()){
+		if(!this.matchFree && !this.isJewelMoving()){
 			if(!this.checkMatches()){
 				this.matchFree = true;
 			}
@@ -230,10 +230,10 @@
 		});
 	};
 
-	Board.prototype.isJewelDropping = function(){
+	Board.prototype.isJewelMoving = function(){
 		var activeTween = false;
 		this.jewels.forEachAlive(function(jewel){
-			if(jewel.dropTween && jewel.dropTween.isRunning){
+			if(jewel.moveTween && jewel.moveTween.isRunning){
 				activeTween = true;
 			}
 		});
@@ -259,19 +259,20 @@
 		var diffRow = Math.abs(selectedCoord[0] - destCoord[0]);
 		var diffCol = Math.abs(selectedCoord[1] - destCoord[1]);
 		if( (diffRow === 1 && diffCol === 0) || (diffRow === 0 && diffCol === 1)){
-			console.log('valid destination');
+			//destination is valid
 			if(this.swapMakesMatch(selectedCoord, destCoord)){
-				//TODO
+				selectedJewel.swap(jewel);
+				this.jewelMatrix[selectedCoord[0]][selectedCoord[1]] = jewel;
+				this.jewelMatrix[destCoord[0]][destCoord[1]] = selectedJewel;
+				this.matchFree = false;
 			}
 			else{
-				console.log('swap would not trigger match');
-				selectedJewel.isSelected = false;
+				selectedJewel.swap(jewel, true);
 			}
 		}
 		else{
 			//Invalid destination
 			selectedJewel.isSelected = false;
-			console.log('invalid destination');
 		}
 	};
 
@@ -311,7 +312,8 @@
 			if(row1 >= 0 && row1 < board.height && row2 >= 0 && row2 < board.height && col1 >= 0 && col1 < board.width && col2 >= 0 && col2 < board.width){
 				jewel1 = board.jewelMatrix[row1][col1];
 				jewel2 = board.jewelMatrix[row2][col2];
-				if(jewel1.jewelColor === jewel2.jewelColor && jewel1.jewelColor === toJewel.jewelColor){
+				if(jewel1 !== toJewel && jewel2 !== toJewel && jewel1.jewelColor === jewel2.jewelColor && jewel1.jewelColor === toJewel.jewelColor){
+					console.log('moving other jewel matched', row1, col1, row2, col2)
 					return true;
 				}
 			}
@@ -324,7 +326,8 @@
 			if(row1 >= 0 && row1 < board.height && row2 >= 0 && row2 < board.height && col1 >= 0 && col1 < board.width && col2 >= 0 && col2 < board.width){
 				jewel1 = board.jewelMatrix[row1][col1];
 				jewel2 = board.jewelMatrix[row2][col2];
-				if(jewel1.jewelColor === jewel2.jewelColor && jewel1.jewelColor === fromJewel.jewelColor){
+				if(jewel1 !== fromJewel && jewel2 !== fromJewel && jewel1.jewelColor === jewel2.jewelColor && jewel1.jewelColor === fromJewel.jewelColor){
+					console.log('moving selected jewel matched', row1, col1, row2, col2);
 					return true;
 				}
 			}

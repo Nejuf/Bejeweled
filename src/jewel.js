@@ -21,7 +21,7 @@
 		this.inputEnabled = true;
 		this.events.onInputDown.add(onClick, this);
 
-		this.dropTween = null;
+		this.moveTween = null;
 		this.destY = null;
 		return this;
 	};
@@ -68,20 +68,20 @@
 
 	Jewel.prototype.drop = function(game, squareSize){
 		var dropSpeed = 0.2;
-		if(this.dropTween){
+		if(this.moveTween){
 			this.destY += squareSize;
-			this.dropTween.stop();
-			this.dropTween = game.add.tween(this);
-			this.dropTween.to({y: this.destY}, (this.destY-this.y)/dropSpeed );
-			this.dropTween.delay(1000);
-			this.dropTween.start();
+			this.moveTween.stop();
+			this.moveTween = game.add.tween(this);
+			this.moveTween.to({y: this.destY}, (this.destY-this.y)/dropSpeed );
+			this.moveTween.delay(1000);
+			this.moveTween.start();
 		}
 		else{
 			this.destY = this.y + squareSize;
-			this.dropTween = game.add.tween(this);
-			this.dropTween.to({y: this.destY}, (this.destY-this.y)/dropSpeed);
-			this.dropTween.delay(1000);
-			this.dropTween.start();
+			this.moveTween = game.add.tween(this);
+			this.moveTween.to({y: this.destY}, (this.destY-this.y)/dropSpeed);
+			this.moveTween.delay(1000);
+			this.moveTween.start();
 		}
 	};
 
@@ -93,6 +93,38 @@
 			jewel.kill();
 		});
 		exitTween.start();
+	};
+
+	Jewel.prototype.swap = function(otherJewel, isInvalidSwap){
+		var thisJewel = this;
+		this.isSelected = false;
+		otherJewel.isSelected = false;
+
+		var thisJewelY = this.y;
+		var thisJewelX = this.x;
+		var otherJewelY = otherJewel.y;
+		var otherJewelX = otherJewel.x;
+
+		var moveTween = this.moveTween = this.board.game.add.tween(this);
+		moveTween.to({y: otherJewelY, x: otherJewelX});
+
+		var moveOtherTween = otherJewel.moveTween = this.board.game.add.tween(otherJewel);
+		moveOtherTween.to({y: thisJewelY, x: thisJewelX});
+
+		if(isInvalidSwap){
+			moveTween.onComplete.add(function(jewel){
+				var moveAgainTween = thisJewel.moveTween = jewel.board.game.add.tween(jewel);
+				moveAgainTween.to({y: thisJewelY, x: thisJewelX});
+				moveAgainTween.start();
+			});
+			moveOtherTween.onComplete.add(function(jewel){
+				var moveAgainTween = otherJewel.moveTween = jewel.board.game.add.tween(jewel);
+				moveAgainTween.to({y: otherJewelY, x: otherJewelX});
+				moveAgainTween.start();
+			});
+		}
+		moveTween.start();
+		moveOtherTween.start();
 	};
 	
 }).call(this);
