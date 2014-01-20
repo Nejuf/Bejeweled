@@ -2,7 +2,7 @@
 
 	var Bejeweled = this.Bejeweled = this.Bejeweled || {};
 
-	var game = new Phaser.Game(700, 540, Phaser.CANVAS, 'bejeweled-container', {
+	var game = window.game = new Phaser.Game(700, 540, Phaser.CANVAS, 'bejeweled-container', {
 		preload: preload,
 		create: create,
 		update: update
@@ -14,7 +14,7 @@
 
 	var board;
 	function create(){
-		board = new Bejeweled.Board(150, 20, 8, 8, 64);
+		board = game.board = new Bejeweled.Board(150, 20, 8, 8, 64);
 		board.create(game);
 	}
 
