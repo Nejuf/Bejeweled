@@ -146,6 +146,8 @@
 
 	Board.prototype.removeMatchedJewels = function(matchGroup){
 		var board = this;
+		var worth = board.getMatchScore(matchGroup);
+
 		_.each(matchGroup, function(coord){
 			var jewel = board.jewelMatrix[coord[0]][coord[1]];
 			jewel.collect(game);
@@ -153,6 +155,8 @@
 		});
 		board.updateMatrix(matchGroup);
 		board.refillBoard();
+
+		game.score += worth;//TODO: Bonuses for chains from a single move
 	};
 
 	Board.prototype.dropColumn = function(coord, matchGroup){
@@ -163,6 +167,19 @@
 				jewel.drop(game, this.squareSize);
 			}
 			row -= 1;
+		}
+	};
+
+	Board.prototype.getMatchScore = function(matchGroup){
+		//TODO Special shapes or bonuses (e.g T/L bonus)
+		if(matchGroup.length === 3){
+			return 50;
+		}
+		else if(matchGroup.length === 4){
+			return 100;
+		}
+		else{
+			return matchGroup.length * 100;
 		}
 	};
 
