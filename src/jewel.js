@@ -47,6 +47,10 @@
 	};
 
 	function onClick(jewel, pointer){
+		if(jewel.board.isJewelMoving()){
+			return;
+		}
+		
 		var selectedJewel = jewel.groupSelectedJewel();
 		if(selectedJewel && selectedJewel !== jewel){
 			jewel.board.attemptSwap(selectedJewel, jewel);
@@ -124,7 +128,7 @@
 				moveAgainTween.to({y: otherJewelY, x: otherJewelX});
 				moveAgainTween.start();
 			});
-			
+
 			thisJewel.destY = thisJewelY;
 			otherJewel.destY = otherJewelY;
 		}
