@@ -10,6 +10,7 @@
 
 	function preload(game){
 		Bejeweled.Board.preload(game);
+		Bejeweled.HUD.preload(game);
 	}
 
 	function create(){
@@ -24,6 +25,15 @@
 	function update(){
 		game.board.update(game);
 		game.hud.updateScore(game.score);
+
+		if(game.board.availableMoves().length === 0){
+			gameOver();
+		}
+	}
+
+	function gameOver(){
+		console.log('game over');
+		game.hud.showGameOver();
 	}
 	
 }).call(this);

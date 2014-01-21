@@ -329,7 +329,6 @@
 				jewel1 = board.jewelMatrix[row1][col1];
 				jewel2 = board.jewelMatrix[row2][col2];
 				if(jewel1 !== toJewel && jewel2 !== toJewel && jewel1.jewelColor === jewel2.jewelColor && jewel1.jewelColor === toJewel.jewelColor){
-					console.log('moving other jewel matched', row1, col1, row2, col2)
 					return true;
 				}
 			}
@@ -343,7 +342,6 @@
 				jewel1 = board.jewelMatrix[row1][col1];
 				jewel2 = board.jewelMatrix[row2][col2];
 				if(jewel1 !== fromJewel && jewel2 !== fromJewel && jewel1.jewelColor === jewel2.jewelColor && jewel1.jewelColor === fromJewel.jewelColor){
-					console.log('moving selected jewel matched', row1, col1, row2, col2);
 					return true;
 				}
 			}
@@ -354,4 +352,28 @@
 
 		return matchedCombo;
 	};
+
+	Board.prototype.availableMoves = function(matrix){
+		var board = this;
+		matrix = matrix || this.jewelMatrix;
+		var moves = [];
+		board.forEachPosition(function(coord1){
+			board.forEachPosition(function(coord2){
+				if(board.swapMakesMatch(coord1, coord2)){
+					moves.push([coord1, coord2]);
+				}
+			});
+		});
+
+		return moves;
+	};
+
+	Board.prototype.forEachPosition = function(iterator){
+		for(var r = 0, len = this.height; r < len; r++){
+			for(var c = 0, len2 = this.width; c < len; c++){
+				iterator.call(this, [r,c]);
+			}
+		}
+	};
+
 }).call(this);
