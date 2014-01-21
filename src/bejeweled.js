@@ -17,6 +17,7 @@
 		game.score = 0;
 
 		game.board = new Bejeweled.Board(150, 20, 8, 8, 64);
+		game.board.onGameOver = gameOver;
 		game.board.create(game);
 
 		game.hud = new Bejeweled.HUD(game, 0, 0, 700, 540);
@@ -25,10 +26,6 @@
 	function update(){
 		game.board.update(game);
 		game.hud.updateScore(game.score);
-
-		if(game.board.availableMoves().length === 0){
-			gameOver();
-		}
 	}
 
 	function gameOver(){

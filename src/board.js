@@ -40,6 +40,9 @@
 		if(!this.matchFree && !this.isJewelMoving()){
 			if(!this.checkMatches()){
 				this.matchFree = true;
+				if(this.availableMoves().length === 0){
+					this.onGameOver();
+				}
 			}
 		}
 
