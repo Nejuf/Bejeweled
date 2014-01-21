@@ -50,7 +50,7 @@
 		if(jewel.board.isJewelMoving()){
 			return;
 		}
-		
+
 		var selectedJewel = jewel.groupSelectedJewel();
 		if(selectedJewel && selectedJewel !== jewel){
 			jewel.board.attemptSwap(selectedJewel, jewel);
@@ -71,20 +71,20 @@
 	};
 
 	Jewel.prototype.drop = function(game, squareSize){
-		var dropSpeed = 0.2;
+		var dropSpeed = 0.24;
 		if(this.moveTween){
 			this.destY += squareSize;
 			this.moveTween.stop();
 			this.moveTween = game.add.tween(this);
 			this.moveTween.to({y: this.destY}, (this.destY-this.y)/dropSpeed );
-			this.moveTween.delay(1000);
+			this.moveTween.delay(800);
 			this.moveTween.start();
 		}
 		else{
 			this.destY = this.y + squareSize;
 			this.moveTween = game.add.tween(this);
 			this.moveTween.to({y: this.destY}, (this.destY-this.y)/dropSpeed);
-			this.moveTween.delay(1000);
+			this.moveTween.delay(800);
 			this.moveTween.start();
 		}
 	};
@@ -92,7 +92,7 @@
 	Jewel.prototype.collect = function(game){
 		this.collected = true;
 		var exitTween = game.add.tween(this);
-		exitTween.to({alpha: 0.2 });
+		exitTween.to({alpha: 0.1 }, 600);
 		exitTween.onComplete.add(function(jewel){
 			jewel.kill();
 		});
@@ -110,22 +110,22 @@
 		var otherJewelX = otherJewel.x;
 
 		var moveTween = this.moveTween = this.board.game.add.tween(this);
-		moveTween.to({y: otherJewelY, x: otherJewelX});
+		moveTween.to({y: otherJewelY, x: otherJewelX}, 500);
 
 		var moveOtherTween = otherJewel.moveTween = this.board.game.add.tween(otherJewel);
-		moveOtherTween.to({y: thisJewelY, x: thisJewelX});
+		moveOtherTween.to({y: thisJewelY, x: thisJewelX}, 500);
 
 		thisJewel.destY = otherJewelY;
 		otherJewel.destY = thisJewelY;
 		if(isInvalidSwap){
 			moveTween.onComplete.add(function(jewel){
 				var moveAgainTween = thisJewel.moveTween = jewel.board.game.add.tween(jewel);
-				moveAgainTween.to({y: thisJewelY, x: thisJewelX});
+				moveAgainTween.to({y: thisJewelY, x: thisJewelX}, 200);
 				moveAgainTween.start();
 			});
 			moveOtherTween.onComplete.add(function(jewel){
 				var moveAgainTween = otherJewel.moveTween = jewel.board.game.add.tween(jewel);
-				moveAgainTween.to({y: otherJewelY, x: otherJewelX});
+				moveAgainTween.to({y: otherJewelY, x: otherJewelX}, 200);
 				moveAgainTween.start();
 			});
 
