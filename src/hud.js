@@ -10,7 +10,7 @@
 		this.height = height;
 
 		this.score = 0;
-		this.scoreText = game.add.text(this.x + 6, this.y + 4, "Score:\n" + this.score, {
+		this.scoreText = game.add.text(this.x + 8, this.y + 4, "Score:\n" + this.score, {
 			font: "32px Arial",
 			fill: "#ff0044",
 			align: "center"
@@ -72,7 +72,7 @@
 	function onPlayAgain(){
 		//TODO
 	};
-	
+
 	function onSubmitScore(){
 		//TODO
 	};

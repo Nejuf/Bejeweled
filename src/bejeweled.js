@@ -16,7 +16,7 @@
 	function create(){
 		game.score = 0;
 
-		game.board = new Bejeweled.Board(150, 20, 8, 8, 64);
+		game.board = new Bejeweled.Board(150, 24, 8, 8, 64);
 		game.board.onGameOver = gameOver;
 		game.board.create(game);
 
