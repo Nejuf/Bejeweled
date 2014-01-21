@@ -8,10 +8,10 @@ Current Features:
 
 * Core Gameplay (swap jewels, match-3, jewels spawn and drop from top, etc.)
 * Game score
+* Game Over
 
 Upcoming Features:
 ------------------
-* Game Over
 * High scores (personal and online)
 * Additional jewel colors
 * Multiple board sizes
